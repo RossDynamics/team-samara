@@ -20,10 +20,8 @@ mpl.rc('font', family='serif', serif='Times New Roman')
 labelfont = {'fontsize':9, 'fontname':'Times New Roman'}
 tickfont = {'fontsize':8, 'fontname':'Times New Roman'}
 
-def func(x,s):
-    l = np.array([(1/(s*x*np.sqrt(2*np.pi)))*np.exp((-1/2)*(np.log(x)/s)**2)],dtype=np.float64)
-    return l
-
+def func(xdata,s):
+    return np.array([(1/(s*x*np.sqrt(2*np.pi)))*np.exp((-1/2)*(np.log(x)/s)**2) for x in xdata],dtype=np.float64)
  
 df = pd.read_excel('Samara Segment Mass.xlsx', sheet_name='Sheet1')
 data_list = df.values.tolist()
@@ -47,7 +45,7 @@ for a in range(0,30):
     center_percent[a] = center_mass[a]/np.nansum(length[a])
     X = ma.masked_invalid(length[a])
     Y = ma.masked_invalid(mass[a])
-    f = interp1d(np.cumsum(X[~X.mask])/np.sum(X[~X.mask]), Y[~X.mask]/np.sum(Y[~X.mask]), kind='cubic') 
+    f = interp1d(np.cumsum(X[~X.mask])/np.sum(X[~X.mask]), Y[~X.mask]/np.sum(Y[~X.mask]), kind='cubic')
     total_data[a] = f(np.linspace(0,.99,200))
     plt.figure(1)
     plt.plot(np.linspace(0, 0.99, 200), f(np.linspace(0, 0.99, 200)))
@@ -60,7 +58,7 @@ for a in range(0,30):
 
 # Find and plot average center of mass percent
 for a, c in enumerate(center_percent):
-  plt.plot([c, c], [0, 1], color=colors[a])
+    plt.plot([c, c], [0, 1], color=colors[a])
   
 plt.plot([np.mean(center_percent),np.mean(center_percent)],[0,1], color='r')
 
@@ -69,9 +67,9 @@ plt.plot([np.mean(center_percent),np.mean(center_percent)],[0,1], color='r')
 # Find best fit line for mass fraction vs length fraction
 
 xdata = np.linspace(0,.99,200)
-xdata = xdata[1:199:1]
+xdata = np.vstack([xdata[1:199:1] for k in range(30)]).ravel()
 #remove 0 entry from array
-total_data = total_data[:,1:199:1]
+total_data = total_data[:,1:199:1].ravel()
 #generate intial guess
 y = func(xdata,.6)
 #fit data
