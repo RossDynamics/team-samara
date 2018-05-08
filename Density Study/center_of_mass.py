@@ -119,14 +119,14 @@ for a in range(0,30):
     center_percent[a] = center_mass[a]/np.nansum(length[a])
     X = ma.masked_invalid(length[a])
     Y = ma.masked_invalid(mass[a])
-    j = interp1d(np.cumsum(X[~X.mask])/np.sum(X[~X.mask]), ((Y[~X.mask])/(X[~X.mask]))/(np.sum((Y[~X.mask])/(X[~X.mask]))), kind='cubic')
+    j = interp1d(np.cumsum(X[~X.mask])/np.sum(X[~X.mask]), ((Y[~X.mask])/(X[~X.mask]))*np.sum(X[~X.mask])/np.sum(Y[~X.mask]), kind='cubic')
     total_data4[a] = j(np.linspace(0,.99,200))
     plt.figure(4)
     plt.plot(np.linspace(0, 0.99, 200), j(np.linspace(0, 0.99, 200)), color=colors[a])
     plt.xlabel('Fraction of length', **labelfont)
-    plt.ylabel('Linear Density, $mg/mm$', **labelfont)
+    plt.ylabel('Linear Density', **labelfont)
     plt.xticks([0, 0.25, 0.5, 0.75, 1.0], **tickfont)
-    area2[a] = np.trapz(total_data4[a],dx=.1)
+    area2[a] = np.sum((((Y[~X.mask])/(X[~X.mask]))*np.sum(X[~X.mask])/np.sum(Y[~X.mask]))*((X[~X.mask])/np.sum(X[~X.mask])))
 
 
 
