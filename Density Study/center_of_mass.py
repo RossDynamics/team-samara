@@ -139,6 +139,7 @@ for a in range(0,30):
 #area = np.trapz(total_data[5],dx=.1)
 xdata = np.linspace(0,.99,200)
 mean_data = [np.mean(total_data[:, k]) for k in range(len(xdata))]
+std_data = [np.std(total_data[:, k]) for k in range(len(xdata))]
 #xdata = np.vstack([xdata[1:199:1] for k in range(30)]).ravel()
 xdata = np.vstack([xdata for k in range(30)]).ravel()
 #remove 0 entry from array
@@ -168,3 +169,7 @@ plt.ylabel('Mass fraction, $m$', **labelfont)
 plt.show()
 #area = np.trapz(total_data[3],dx=.1)
 
+plt.figure(6)
+ax = plt.gca()
+ax.errorbar(xdata, mean_data, yerr=std_data)
+ax.plot(xdata,y(xdata), color='r')
