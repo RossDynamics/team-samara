@@ -39,6 +39,8 @@ center_percent = matrix = np.zeros((30,1))
 total_data = matrix = np.zeros((30,200))
 total_data2 = matrix = np.zeros((30,200))
 total_data3 = matrix = np.zeros((30,200))
+total_data4 = matrix = np.zeros((30,200))
+area2 = matrix = np.zeros((30,1))
 colors = [mpl.cm.viridis(a) for a in np.linspace(0, 1, 30)]
 
 
@@ -103,11 +105,32 @@ for a in range(0,30):
     plt.figure(3)
     plt.plot(np.linspace(0, 0.99, 200), h(np.linspace(0, 0.99, 200)), color=colors[a])
     plt.xlabel('Fraction of length', **labelfont)
-    plt.ylabel('Density, $mg/mm^2$', **labelfont)
+    plt.ylabel('Area Density, $mg/mm^2$', **labelfont)
     plt.xticks([0, 0.25, 0.5, 0.75, 1.0], **tickfont)
 
 
-area2 = np.trapz(total_data3[2],dx=.1)
+
+#Plot linear density vs length fraction
+for a in range(0,30):
+    mass[a, 1:] = data_list[a+2][1:21]
+    length[a, 1:] = data_list[a+34][1:21]
+    mass_length[a] = [b*c for b,c in zip(mass[a],np.cumsum(length[a]))]
+    center_mass[a] = np.nansum(mass_length[a])/np.nansum(mass[a])
+    center_percent[a] = center_mass[a]/np.nansum(length[a])
+    X = ma.masked_invalid(length[a])
+    Y = ma.masked_invalid(mass[a])
+    j = interp1d(np.cumsum(X[~X.mask])/np.sum(X[~X.mask]), ((Y[~X.mask])/(X[~X.mask]))/(np.sum((Y[~X.mask])/(X[~X.mask]))), kind='cubic')
+    total_data4[a] = j(np.linspace(0,.99,200))
+    plt.figure(4)
+    plt.plot(np.linspace(0, 0.99, 200), j(np.linspace(0, 0.99, 200)), color=colors[a])
+    plt.xlabel('Fraction of length', **labelfont)
+    plt.ylabel('Linear Density, $mg/mm$', **labelfont)
+    plt.xticks([0, 0.25, 0.5, 0.75, 1.0], **tickfont)
+    area2[a] = np.trapz(total_data4[a],dx=.1)
+
+
+
+
         
         
 
@@ -137,7 +160,7 @@ def y2(x):
 
 
 #Plot fit by itself
-plt.figure(4)
+plt.figure(5)
 plt.plot(xdata,y(xdata), color='r')
 plt.xlabel('Fraction of length', **labelfont)
 plt.ylabel('Mass fraction, $m$', **labelfont)
