@@ -145,31 +145,35 @@ xdata = np.vstack([xdata for k in range(30)]).ravel()
 #remove 0 entry from array
 #total_data = total_data[:,1:199:1].ravel()
 total_data = total_data.ravel()
+total_data4 = total_data4.ravel()
 
 #fit data
 z = np.polyfit(xdata,total_data,9)
+z2 = np.polyfit(xdata,total_data4,9)
 
 xdata = np.linspace(0,.99,200)
 y = np.poly1d(z)
+y2 = np.poly1d(z2)
 plt.figure(1)
 plt.plot(xdata, y(xdata), color='r')
+plt.figure(4)
+plt.plot(xdata, y2(xdata),color='r')
 #plot mean data
 #plt.plot(np.linspace(0,.99,200), mean_data, color='k')
 
-def y2(x):
-    return 5.75154970e+02*x**9-2.80978700e+03*x**8+5.88451014e+03*x**7-6.92413516e+03*x**6+5.04191080e+03*x**5-2.35416177e+03*x**4+6.99852513e+02*x**3-1.23416369e+02*x**2+1.00921020e+01*x-1.11407137e-03
 
 
 #Plot fit by itself
-plt.figure(5)
-plt.plot(xdata,y(xdata), color='r')
-plt.xlabel('Fraction of length', **labelfont)
-plt.ylabel('Mass fraction, $m$', **labelfont)
+#plt.figure(5)
+#plt.plot(xdata,y(xdata), color='r')
+#plt.xlabel('Fraction of length', **labelfont)
+#plt.ylabel('Mass fraction, $m$', **labelfont)
 
 plt.show()
 #area = np.trapz(total_data[3],dx=.1)
 
-plt.figure(6)
+plt.figure(5)
 ax = plt.gca()
 ax.errorbar(xdata, mean_data, yerr=std_data)
 ax.plot(xdata,y(xdata), color='r')
+
