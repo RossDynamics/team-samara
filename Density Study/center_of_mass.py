@@ -110,7 +110,7 @@ for a in range(0,30):
 area2 = np.trapz(total_data3[2],dx=.1)
         
         
-        
+
         
 # Find best fit line for mass fraction vs length fraction
 #area = np.trapz(total_data[5],dx=.1)
@@ -142,6 +142,6 @@ plt.plot(xdata,y(xdata), color='r')
 plt.xlabel('Fraction of length', **labelfont)
 plt.ylabel('Mass fraction, $m$', **labelfont)
 
+plt.show()
 #area = np.trapz(total_data[3],dx=.1)
-
 
