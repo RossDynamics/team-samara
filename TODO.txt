@@ -1,0 +1,8 @@
+Master TODO list:
+
+0. Go through the code and figure out what's going on.
+1. Tweak video parameters to get data from problem files.
+2. Get properties about drop from drop data: average speed of descent. Rotation rate about vertical axis.
+3. Convert pixel to cm.
+4. Figure out timestamps of outdoor drops.
+5. Load and plot outdoor drop data.

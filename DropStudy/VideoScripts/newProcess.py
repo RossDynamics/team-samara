@@ -1,4 +1,3 @@
-
 import os
 import cv2
 import matplotlib.pyplot as plt
@@ -8,18 +7,20 @@ import skimage.morphology as skmorph
 import skimage.measure as skmeas
 import skimage.segmentation as skseg
 
-
+### Defines a square search area to look for samara
+### based on the previous centroid location
 def searchArea(centroid, size=200):
   # [rowmin, rowmax, colmin, colmax]
   rowmin = max(int(round(centroid[0]))-size//2, 0)
   colmin = max(int(round(centroid[1]))-size//2, 0)
   return [rowmin, rowmin+size, colmin, colmin+size]
 
-
 def videorun(filename, savefile):
   with open(savefile, 'w') as data:
     data.write('FrameNo,Row,Column,Angle\n')
     video = cv2.VideoCapture(filename)
+
+    ### Average first n_avg frames in the top initsize[0] rows of the image
     initsize = (150,1280)
     n_avg = 40
     vidavg = np.zeros(initsize)
@@ -28,6 +29,8 @@ def videorun(filename, savefile):
       if ok:
         vidavg += frame[:initsize[0], :initsize[1], 0].astype('float')/n_avg
 
+    ### Subtracting vidavg, we wait to identify the first object that appears
+    ### in the top initsize[0] rows of the image
     video = cv2.VideoCapture(filename)
     first = False
     while not first:
@@ -40,6 +43,7 @@ def videorun(filename, savefile):
         thresh = top > yen
         clean = skmorph.remove_small_objects(thresh, min_size=80) 
         labeled = skseg.clear_border(skmorph.label(clean))
+        ### When an object appears, save its properties and break out of loop (first=True)
         if np.max(labeled) > 0:
           props = [(p.area, p.centroid, p.orientation) for p in skmeas.regionprops(labeled)]
           props.sort(reverse=True)
@@ -48,10 +52,9 @@ def videorun(filename, savefile):
           data.write('{},{},{},{}\n'.format(int(round(video.get(1))), cent[0], cent[1], props[0][2]))
           lastcent = cent
           first = True
-
-    # k = 0
+    
+    ### Rest of loop.
     while ok:
-    # for k in range(8):
       ok, frame = video.read()
       if ok:
         fig, ax = plt.subplots(1,2)
@@ -75,9 +78,11 @@ def videorun(filename, savefile):
           # output.append((cent,props[0][2]))
           data.write('{},{},{},{}\n'.format(int(round(video.get(1))), cent[0], cent[1], props[0][2]))
           lastcent = cent
+        ### Break loop when no objects detected
         else: ok = False
-          # k += 1
 
+
+### Main loop
 os.chdir('2017July07')
 for file in os.listdir('.'):
   # if file[1] == '-':
