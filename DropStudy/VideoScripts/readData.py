@@ -102,7 +102,11 @@ while frame_sect_beg+W < frame_end:
 
 plt.figure(1)
 plt.plot(avg_vel_m_s)
+plt.title('Average velocity of samara')
+plt.ylabel('v, m/s')
 plt.figure(2)
+plt.plot(freq)
+plt.title('Frequency of Autorotation')
 plt.plot(freq)
 #plt.figure(3)
 #plt.plot(omega, mag)
