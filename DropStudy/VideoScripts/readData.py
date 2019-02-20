@@ -47,67 +47,70 @@ r = cv2.selectROI(frame, False, False)
 pixels_to_inch = r[3]/6
 #pixels_to_inch = 22.5
 frame_sect_beg = 0
-W = 400
+W = 300
 dt = 1/2000
 N = 10000
-#plt.figure(1)
-#plt.plot(drop['Column']/pixels_to_inch, drop['Row']/pixels_to_inch)
-#plt.gca().invert_yaxis()
-#plt.axis('equal')
+plt.figure(1)
+plt.plot(drop['Column']/pixels_to_inch, drop['Row']/pixels_to_inch)
+plt.gca().invert_yaxis()
+plt.axis('equal')
 frame_end = np.size(drop['Column'])
 freq = np.zeros(frame_end-W)
-avg_vel_m_s = np.zeros(frame_end-W)
+avg_vel_m_s = np.zeros(N-W)
 
-while frame_sect_beg+W < frame_end: 
+x = drop['Column']/pixels_to_inch
+y = drop['Row']/pixels_to_inch
+x = x-np.mean(x)
+t = drop['FrameNo']
+dt_new = t.values[-1]*dt/N
+spl = interp.UnivariateSpline(t, x, k = 1, s=0)
+ts = np.linspace(np.min(t), np.max(t), N)
+yinterp = np.interp(ts, t, y)
+interped = spl(ts)
+b, a = spsig.butter(3, 0.003)
+xs = spsig.filtfilt(b, a, interped)
+d, c = spsig.butter(3, 0.003)
+ys = spsig.filtfilt(d, c, yinterp)
+
+plt.figure(2)
+plt.plot(xs, ys)
+plt.gca().invert_yaxis()
+plt.axis('equal')
+
+while frame_sect_beg+W < N: 
 
     frame_sect_end = frame_sect_beg+W
     frame_mid = (frame_sect_beg+frame_sect_end)/2
 
 
-    x = drop['Column'][frame_sect_beg:frame_sect_end]/pixels_to_inch
-    y = drop['Row'][frame_sect_beg:frame_sect_end]/pixels_to_inch
-    x = x-np.mean(x)
-    t = drop['FrameNo'][frame_sect_beg:frame_sect_end]
-    spl = interp.UnivariateSpline(t, x, k = 1, s=0)
-    ts = np.linspace(np.min(t), np.max(t), N)
-    yinterp = np.interp(ts, t, y)
-    interped = spl(ts)
-    b, a = spsig.butter(3, 0.001)
-    xs = spsig.filtfilt(b, a, interped)
-    d, c = spsig.butter(3, 0.001)
-    ys = spsig.filtfilt(d, c, yinterp)
 
-#    plt.figure(2)
-#    plt.plot(xs, ys)
-#    plt.gca().invert_yaxis()
-#    plt.axis('equal')
 
-    omega = np.linspace(0, 1/(2*dt), N//2)
-    xf = fftpack.fft(xs)
-    xwf = fftpack.fft(xs*spsig.blackman(N))
-    mag = 2/N*np.abs(xf[0:N//2])
-    magw = 2/N*np.abs(xwf[0:N//2])
-
-    test = np.zeros(xwf.shape)
-    ind = np.argmax(np.abs(xwf[3:100]))
-    test[ind+3] = np.abs(xwf[ind+3])
-    testsig = fftpack.ifft(test)
+#    omega = np.linspace(0, 1/(2*dt), N//2)
+#    xf = fftpack.fft(xs)
+#    xwf = fftpack.fft(xs*spsig.blackman(N))
+#    mag = 2/N*np.abs(xf[0:N//2])
+#    magw = 2/N*np.abs(xwf[0:N//2])
+#
+#    test = np.zeros(xwf.shape)
+#    ind = np.argmax(np.abs(xwf[3:100]))
+#    test[ind+3] = np.abs(xwf[ind+3])
+#    testsig = fftpack.ifft(test)
     
-    freq[frame_sect_beg] = np.max(test) #in units?
-    avg_vel_in_s = (ys[N-1]-ys[0])/(W/2000) # in inches per second
+#    freq[frame_sect_beg] = np.max(test) #in units?
+    avg_vel_in_s = (ys[frame_sect_end]-ys[frame_sect_beg])/(W*dt_new) # in inches per second
     avg_vel_m_s[frame_sect_beg] = avg_vel_in_s/39.37 #in meters per second
 
 
     frame_sect_beg = frame_sect_beg+1
 
-plt.figure(1)
+plt.figure(3)
 plt.plot(avg_vel_m_s)
 plt.title('Average velocity of samara')
 plt.ylabel('v, m/s')
-plt.figure(2)
-plt.plot(freq)
-plt.title('Frequency of Autorotation')
-plt.plot(freq)
+#plt.figure(2)
+#plt.plot(freq)
+#plt.title('Frequency of Autorotation')
+
 #plt.figure(3)
 #plt.plot(omega, mag)
 #plt.plot(omega, magw)
