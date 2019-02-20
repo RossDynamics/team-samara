@@ -14,40 +14,40 @@ import scipy.interpolate as interp
 import scipy.signal as spsig
 from scipy import fftpack
 
-os.chdir('Norway Trial Data')
+folder = 'Norway Trial Data'
 file_name = 'n-g01-t01-data'
 
-drop = pd.read_csv(file_name+'.csv')
+drop = pd.read_csv(folder+'/'+file_name+'.csv')
 #plt.plot(drop['Row'], drop['Column'])
 
 
 
-os.chdir('..')
-os.chdir('2017July07')
-#os.chdir('White Background')
-for file in os.listdir('.'):
-#   if file[:3] == 'n-g':
-  if file[:9] == file_name[:9]:
-    base = file
-    os.chdir(base)
-    for file in os.listdir('.'):
-      if file[-4:] == '.avi':
-        vidname = file
+# os.chdir('..')
+# os.chdir('2017July07')
+# #os.chdir('White Background')
+# for file in os.listdir('.'):
+# #   if file[:3] == 'n-g':
+#   if file[:9] == file_name[:9]:
+#     base = file
+#     os.chdir(base)
+#     for file in os.listdir('.'):
+#       if file[-4:] == '.avi':
+#         vidname = file
         
-video = cv2.VideoCapture(vidname)
+# video = cv2.VideoCapture(vidname)
 
-ok, frame = video.read()
+# ok, frame = video.read()
 
-##Choose box that covers  inches, and the width of the tape
-r = cv2.selectROI(frame, False, False)
+# ##Choose box that covers  inches, and the width of the tape
+# r = cv2.selectROI(frame, False, False)
 
 ### Pixels per inch in x-direction
 #pixels_to_inch = r[2]/.5
 #Pixels per inch in y-direction
-pixels_to_inch = r[3]/6
-#pixels_to_inch = 22.5
+# pixels_to_inch = r[3]/6
+pixels_to_inch = 22.5
 frame_sect_beg = 0
-W = 300
+W = 3000
 dt = 1/2000
 N = 10000
 plt.figure(1)
@@ -55,7 +55,7 @@ plt.plot(drop['Column']/pixels_to_inch, drop['Row']/pixels_to_inch)
 plt.gca().invert_yaxis()
 plt.axis('equal')
 frame_end = np.size(drop['Column'])
-freq = np.zeros(frame_end-W)
+freq = np.zeros(N-W)
 avg_vel_m_s = np.zeros(N-W)
 
 x = drop['Column']/pixels_to_inch
@@ -82,18 +82,34 @@ while frame_sect_beg+W < N:
     frame_sect_end = frame_sect_beg+W
     frame_mid = (frame_sect_beg+frame_sect_end)/2
 
+    x_frame = xs[frame_sect_beg:frame_sect_end]
+    x_frame = x_frame-np.mean(x_frame)
+    R = 10*W
+    padded = np.zeros(R)
+    padded[:W] = x_frame
 
+    omega = np.linspace(0, 1/(2*dt_new), R//2)
+    xf = fftpack.fft(padded)
+    mag = 2/R*np.abs(xf[0:R//2])
+    ind = np.argmax(mag)
+    freq[frame_sect_beg] = omega[ind]
 
+    test = np.zeros(xf.shape)
+    test[ind] = np.abs(xf[ind])
+    testsig = fftpack.ifft(test)
+    if frame_sect_beg == 4000:
+    	plt.figure()
+    	plt.plot(x_frame)
+    	plt.figure()
+    	plt.plot(omega, mag)
+    	plt.xlim([0, 25])
 
 #    omega = np.linspace(0, 1/(2*dt), N//2)
-#    xf = fftpack.fft(xs)
 #    xwf = fftpack.fft(xs*spsig.blackman(N))
 #    mag = 2/N*np.abs(xf[0:N//2])
 #    magw = 2/N*np.abs(xwf[0:N//2])
 #
-#    test = np.zeros(xwf.shape)
 #    ind = np.argmax(np.abs(xwf[3:100]))
-#    test[ind+3] = np.abs(xwf[ind+3])
 #    testsig = fftpack.ifft(test)
     
 #    freq[frame_sect_beg] = np.max(test) #in units?
@@ -103,13 +119,14 @@ while frame_sect_beg+W < N:
 
     frame_sect_beg = frame_sect_beg+1
 
-plt.figure(3)
+plt.figure()
 plt.plot(avg_vel_m_s)
 plt.title('Average velocity of samara')
 plt.ylabel('v, m/s')
-#plt.figure(2)
-#plt.plot(freq)
-#plt.title('Frequency of Autorotation')
+plt.figure()
+plt.plot(freq)
+# plt.ylim([-50, 50])
+plt.title('Frequency of Autorotation')
 
 #plt.figure(3)
 #plt.plot(omega, mag)
