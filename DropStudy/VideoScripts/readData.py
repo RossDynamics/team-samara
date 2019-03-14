@@ -13,9 +13,10 @@ import pandas as pd
 import scipy.interpolate as interp
 import scipy.signal as spsig
 from scipy import fftpack
+from scipy.optimize import curve_fit
 
-os.chdir('Norway Trial Data')
-file_name = 'n-g01-t01-data'
+os.chdir('Real Samara Data')
+file_name = 'r-g08-t03-data'
 
 drop = pd.read_csv(file_name+'.csv')
 #plt.plot(drop['Row'], drop['Column'])
@@ -47,7 +48,7 @@ r = cv2.selectROI(frame, False, False)
 pixels_to_inch = r[3]/6
 #pixels_to_inch = 22.5
 frame_sect_beg = 0
-W = 300
+W = 1500
 dt = 1/2000
 N = 10000
 plt.figure(1)
@@ -55,13 +56,19 @@ plt.plot(drop['Column']/pixels_to_inch, drop['Row']/pixels_to_inch)
 plt.gca().invert_yaxis()
 plt.axis('equal')
 frame_end = np.size(drop['Column'])
-freq = np.zeros(frame_end-W)
+#freq = np.zeros(frame_end-W)
 avg_vel_m_s = np.zeros(N-W)
 
-x = drop['Column']/pixels_to_inch
-y = drop['Row']/pixels_to_inch
+x = drop['Column'][152:1275]/pixels_to_inch
+y = drop['Row'][152:1275]/pixels_to_inch
+t = drop['FrameNo'][152:1275]
+#x = drop['Column'][0:1030]/pixels_to_inch
+#y = drop['Row'][0:1030]/pixels_to_inch
+#t = drop['FrameNo'][0:1030]
+#x = drop['Column']/pixels_to_inch
+#y = drop['Row']/pixels_to_inch
+#t = drop['FrameNo']
 x = x-np.mean(x)
-t = drop['FrameNo']
 dt_new = t.values[-1]*dt/N
 spl = interp.UnivariateSpline(t, x, k = 1, s=0)
 ts = np.linspace(np.min(t), np.max(t), N)
@@ -103,8 +110,19 @@ while frame_sect_beg+W < N:
 
     frame_sect_beg = frame_sect_beg+1
 
+
+## Fit Curve (exponential) to velocity data
+#def func(x, a):
+#    return (a*x**a)/x**(a+1)
+#
+#popt, pcov = curve_fit(func, xs[:np.size(avg_vel_m_s)], avg_vel_m_s)
+x_vals = range(0,np.size(avg_vel_m_s))
+Z = np.poly1d(np.polyfit(x_vals, avg_vel_m_s, 5))
+
 plt.figure(3)
 plt.plot(avg_vel_m_s)
+#plt.plot(xs[:np.size(avg_vel_m_s)], func(xs[:np.size(avg_vel_m_s)], *popt), 'r-', label="Fitted Curve")
+plt.plot(x_vals,Z(x_vals),'r-')
 plt.title('Average velocity of samara')
 plt.ylabel('v, m/s')
 #plt.figure(2)
