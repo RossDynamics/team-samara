@@ -16,7 +16,7 @@ from scipy import fftpack
 from scipy.optimize import curve_fit
 
 os.chdir('Real Samara Data')
-file_name = 'r-g08-t03-data'
+file_name = 'r-g09-t01-data'
 
 drop = pd.read_csv(file_name+'.csv')
 #plt.plot(drop['Row'], drop['Column'])
@@ -59,9 +59,9 @@ frame_end = np.size(drop['Column'])
 #freq = np.zeros(frame_end-W)
 avg_vel_m_s = np.zeros(N-W)
 
-x = drop['Column'][152:1275]/pixels_to_inch
-y = drop['Row'][152:1275]/pixels_to_inch
-t = drop['FrameNo'][152:1275]
+x = drop['Column'][120:1965]/pixels_to_inch
+y = drop['Row'][120:1965]/pixels_to_inch
+t = drop['FrameNo'][120:1965]
 #x = drop['Column'][0:1030]/pixels_to_inch
 #y = drop['Row'][0:1030]/pixels_to_inch
 #t = drop['FrameNo'][0:1030]
