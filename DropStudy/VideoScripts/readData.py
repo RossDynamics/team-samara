@@ -13,6 +13,7 @@ import pandas as pd
 import scipy.interpolate as interp
 import scipy.signal as spsig
 from scipy import fftpack
+from scipy.optimize import curve_fit
 
 folder = 'Norway Trial Data'
 file_name = 'n-g01-t01-data'
@@ -56,12 +57,19 @@ plt.gca().invert_yaxis()
 plt.axis('equal')
 frame_end = np.size(drop['Column'])
 freq = np.zeros(N-W)
+#freq = np.zeros(frame_end-W)
 avg_vel_m_s = np.zeros(N-W)
 
-x = drop['Column']/pixels_to_inch
-y = drop['Row']/pixels_to_inch
+x = drop['Column'][120:1965]/pixels_to_inch
+y = drop['Row'][120:1965]/pixels_to_inch
+t = drop['FrameNo'][120:1965]
+#x = drop['Column'][0:1030]/pixels_to_inch
+#y = drop['Row'][0:1030]/pixels_to_inch
+#t = drop['FrameNo'][0:1030]
+#x = drop['Column']/pixels_to_inch
+#y = drop['Row']/pixels_to_inch
+#t = drop['FrameNo']
 x = x-np.mean(x)
-t = drop['FrameNo']
 dt_new = t.values[-1]*dt/N
 spl = interp.UnivariateSpline(t, x, k = 1, s=0)
 ts = np.linspace(np.min(t), np.max(t), N)
@@ -119,8 +127,19 @@ while frame_sect_beg+W < N:
 
     frame_sect_beg = frame_sect_beg+1
 
-plt.figure()
+
+## Fit Curve (exponential) to velocity data
+#def func(x, a):
+#    return (a*x**a)/x**(a+1)
+#
+#popt, pcov = curve_fit(func, xs[:np.size(avg_vel_m_s)], avg_vel_m_s)
+x_vals = range(0,np.size(avg_vel_m_s))
+Z = np.poly1d(np.polyfit(x_vals, avg_vel_m_s, 5))
+
+plt.figure(3)
 plt.plot(avg_vel_m_s)
+#plt.plot(xs[:np.size(avg_vel_m_s)], func(xs[:np.size(avg_vel_m_s)], *popt), 'r-', label="Fitted Curve")
+plt.plot(x_vals,Z(x_vals),'r-')
 plt.title('Average velocity of samara')
 plt.ylabel('v, m/s')
 plt.figure()
