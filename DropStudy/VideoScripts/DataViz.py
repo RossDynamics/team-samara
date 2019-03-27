@@ -10,10 +10,9 @@ vals =list(real_vel['velocity'].values)
 Rvelocities  = []; 
 for val in vals:
     if not ' ' in val:
-        print(val)
         Rvelocities.append(float(val))
 
-print('Mean: ',np.mean(Rvelocities),'\n','Std: ',np.std(Rvelocities),'\n\n')
+print('Real Norway maples \nMean: ',np.mean(Rvelocities),'\n','Std: ',np.std(Rvelocities),'\n\n')
 
 plt.figure()
 plt.hist(Rvelocities)
@@ -22,9 +21,8 @@ vals = list(norway_vel['velocity'].values)
 Nvelocities = []; 
 for val in vals:
     if not ' ' in val:
-        print(val)
         Nvelocities.append(float(val))
 
-print('Mean: ',np.mean(Nvelocities),'\n','Std: ',np.std(Nvelocities),'\n\n')
+print('3D-printed Norway maples \nMean: ',np.mean(Nvelocities),'\n','Std: ',np.std(Nvelocities),'\n\n')
 plt.figure()
 plt.hist(Nvelocities)
