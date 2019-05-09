@@ -1,19 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed May  8 10:43:16 2019
-
-@author: Norris 111
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Thu May  2 11:18:02 2019
-
-@author: Norris 111
-"""
-
-# -*- coding: utf-8 -*-
-"""
 Created on Fri Feb  8 15:17:51 2019
 
 @author: Norris 111
@@ -33,7 +19,6 @@ os.chdir('Silver Trial Data')
 file_name = 's-g21-t02-data'
 drop = pd.read_csv(file_name+'.csv')
 #plt.plot(drop['Row'], drop['Column'])
-
 
 
 os.chdir('..')
@@ -102,38 +87,24 @@ x = x-np.mean(x)
 #plt.plot(X1,Y1)
 
 def removeJumps(X, Y):
-
- ds = np.sqrt(np.diff(X)**2+np.diff(Y)**2)
-
- jumps = ds < 1.2*np.mean(ds)
-
- if jumps.all():
-
-   return True, X, Y
-
- else:
-
-   indexlist = np.where(jumps==True)
-
-   start = indexlist[0][0]
-   
-   end = indexlist[0][-1]
-
-   x = X[start:end+1]; y = Y[start:end+1]
-
-   jumps = jumps[start:end+1]
-   t = np.linspace(0, 1, len(x))
-
-   splx = interp.interp1d(t[jumps], x[jumps])
-
-   sply = interp.interp1d(t[jumps], y[jumps])
-
-   return False, splx(t), sply(t)
+  ds = np.sqrt(np.diff(X)**2+np.diff(Y)**2)
+  jumps = ds < 1.2*np.mean(ds)
+  if jumps.all():
+    return True, X, Y
+  else:
+    indexlist = np.where(jumps==True)
+    start = indexlist[0][0]
+    end = indexlist[0][-1]
+    x = X[start:end+1]; y = Y[start:end+1]
+    jumps = jumps[start:end+1]
+    t = np.linspace(0, 1, len(x))
+    splx = interp.interp1d(t[jumps], x[jumps])
+    sply = interp.interp1d(t[jumps], y[jumps])
+    return False, splx(t), sply(t)
 
 good = False
 
 while not good:
-
     good, x, y = removeJumps(x,y)
 
 
@@ -155,12 +126,8 @@ plt.gca().invert_yaxis()
 plt.axis('equal')
 
 while frame_sect_beg+W < N: 
-
     frame_sect_end = frame_sect_beg+W
     frame_mid = (frame_sect_beg+frame_sect_end)/2
-
-
-
 
 #    omega = np.linspace(0, 1/(2*dt), N//2)
 #    xf = fftpack.fft(xs)
@@ -172,11 +139,10 @@ while frame_sect_beg+W < N:
 #    ind = np.argmax(np.abs(xwf[3:100]))
 #    test[ind+3] = np.abs(xwf[ind+3])
 #    testsig = fftpack.ifft(test)
-    
+
 #    freq[frame_sect_beg] = np.max(test) #in units?
     avg_vel_in_s = (ys[frame_sect_end]-ys[frame_sect_beg])/(W*dt_new) # in inches per second
     avg_vel_m_s[frame_sect_beg] = avg_vel_in_s/39.37 #in meters per second
-
 
     frame_sect_beg = frame_sect_beg+1
 
@@ -189,23 +155,22 @@ while frame_sect_beg+W < N:
 x_vals = range(0,np.size(avg_vel_m_s))
 Z = np.poly1d(np.polyfit(x_vals, avg_vel_m_s, 5))
 def findCutoff(T, v):
-
    for cutoff in range(len(T[:-1000])):
-
        ave = np.mean(v[cutoff:])
-
 #       std = np.std(v[cutoff:])
-
-       if v[cutoff]-ave < .1:
-
+       if np.abs(v[cutoff]-ave) < .1:
            return cutoff
-
    return False
-
 
 cutoff = findCutoff(ts,avg_vel_m_s)
 print(cutoff)
 AVG = np.mean(avg_vel_m_s[cutoff:])
+peaks1 = spsig.find_peaks(xs[cutoff:])
+peaks2 = spsig.find_peaks(xs[cutoff:], distance=np.mean(np.diff(peaks1))/4)
+time_peaks = [ts[cutoff+pk] for pk in peaks2]
+period = np.mean(np.diff(time_peaks))
+frequency = 2*np.pi/period
+print(frequency)
 print(AVG)
 plt.figure(3)
 plt.plot(avg_vel_m_s)

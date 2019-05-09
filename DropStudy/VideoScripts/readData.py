@@ -13,17 +13,10 @@ import pandas as pd
 import scipy.interpolate as interp
 import scipy.signal as spsig
 
-
-
 def datarun(filename):
-
     file_name = filename
-    
     drop = pd.read_csv(file_name)
     #plt.plot(drop['Row'], drop['Column'])
-    
-    
-    
 #    os.chdir('..')
 #    os.chdir('2017July07')
 #    #os.chdir('White Background')
@@ -64,7 +57,6 @@ def datarun(filename):
 #    plt.axis('equal')
 
     avg_vel_m_s = np.zeros(N-W)
-    
 
     x = drop['Column']/pixels_to_inch
     y = drop['Row']/pixels_to_inch
@@ -72,40 +64,25 @@ def datarun(filename):
     x = x-np.mean(x)
     
     def removeJumps(X, Y):
-    
      ds = np.sqrt(np.diff(X)**2+np.diff(Y)**2)
-    
      jumps = ds < 3*np.mean(ds)
-    
      if np.sum(jumps) == len(ds):
-    
        return True, X, Y
-    
      else:
-    
        indexlist = np.where(jumps==True)
-    
        start = indexlist[0][0]
-       
        end = indexlist[0][-1]
-    
        x = X[start:end+1]; y = Y[start:end+1]
-    
        jumps = jumps[start:end+1]
        t = np.linspace(0, 1, len(x))
-    
        splx = interp.interp1d(t[jumps], x[jumps])
-    
        sply = interp.interp1d(t[jumps], y[jumps])
-    
        return False, splx(t), sply(t)
     
     good = False
     
     while not good:
-    
         good, x, y = removeJumps(x,y)
-    
     
 #    plt.plot(x,y)
     t = t[:len(x)]
@@ -125,37 +102,25 @@ def datarun(filename):
 #    plt.axis('equal')
     
     while frame_sect_beg+W < N: 
-    
         frame_sect_end = frame_sect_beg+W
-
-        
-
         avg_vel_in_s = (ys[frame_sect_end]-ys[frame_sect_beg])/(W*dt_new) # in inches per second
         avg_vel_m_s[frame_sect_beg] = avg_vel_in_s/39.37 #in meters per second
-    
-    
         frame_sect_beg = frame_sect_beg+1
     
     x_vals = range(0,np.size(avg_vel_m_s))
 #    Z = np.poly1d(np.polyfit(x_vals, avg_vel_m_s, 5))
     def findCutoff(T, v):
-    
        for cutoff in range(len(T[:-1000])):
-    
            ave = np.mean(v[cutoff:])
-    
     #       std = np.std(v[cutoff:])
-    
            if v[cutoff]-ave < .1:
-    
                return cutoff
-    
        return False
-    
     
     cutoff = findCutoff(ts,avg_vel_m_s)
 #    print(cutoff)
     AVG = np.mean(avg_vel_m_s[cutoff:])
+    
 #    print(AVG)
 #    plt.figure(3)
 #    plt.plot(avg_vel_m_s)
