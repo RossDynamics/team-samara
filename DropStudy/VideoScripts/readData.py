@@ -120,7 +120,11 @@ def datarun(filename):
     cutoff = findCutoff(ts,avg_vel_m_s)
 #    print(cutoff)
     AVG = np.mean(avg_vel_m_s[cutoff:])
-    
+    peaks1, _ = spsig.find_peaks(xs[cutoff:])
+    peaks2, _ = spsig.find_peaks(xs[cutoff:], distance=np.mean(np.diff(peaks1))/4)
+    time_peaks = [ts[cutoff+pk]*dt for pk in peaks2]
+    period = np.mean(np.diff(time_peaks))
+    frequency = 2*np.pi/period
 #    print(AVG)
 #    plt.figure(3)
 #    plt.plot(avg_vel_m_s)
@@ -144,18 +148,24 @@ def datarun(filename):
     #plt.plot(ts, 10*testsig)
     #plt.show()
 
-    return cutoff, AVG
+    return cutoff, AVG, frequency
     
     
   #main loop
-  
-os.chdir('Silver Trial Data')
-with open('../'+'SilverMapleData'+'.csv', 'w') as data:
-    data.write('Trial,Cutoff,Avg Vel\n')
-    for file in os.listdir('.'):
-        c, v = datarun(file)
-        if v > 2.2 or v < 0.3:
-            v = ' '
-            c = ' '
-        data.write('{},{},{}\n'.format(file, c,v))
-    
+
+folders = ['Silver Trial Data', 'Real Samara Data', 'Norway Trial Data']
+files = ['SilverMapleData','RealSamaraData','NorwayMapleData']
+
+for fname, folder in zip(files, folders):
+    os.chdir(folder)
+    with open('../'+fname+'.csv', 'w') as data:
+        data.write('Trial,Cutoff,Avg Vel\n')
+        for file in os.listdir('.'):
+            c, v, f = datarun(file)
+#            if v > 2.2 or v < 0.3:
+#                v = ' '
+#                c = ' '
+            if np.isnan(f):
+                f = ' '
+            data.write('{},{},{},{}\n'.format(file, c,v,f))
+    os.chdir('..')
