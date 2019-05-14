@@ -1,0 +1,90 @@
+Trial,Cutoff,Avg Vel
+r-g01-t01-data.csv,0,1.055878353
+r-g01-t02-data.csv,0,1.462808996
+r-g01-t03-data.csv,0,0.982418681
+r-g02-t01-data.csv,0,1.118976943
+r-g02-t02-data.csv,0,0.985550934
+r-g02-t03-data.csv,0,0.68527317
+r-g03-t01-data.csv,0,1.129986625
+r-g03-t02-data.csv,0,1.056008296
+r-g03-t03-data.csv,0,0.984815557
+r-g04-t01-data.csv,0,1.01462569
+r-g04-t02-data.csv,0,0.913449797
+r-g04-t03-data.csv,0,1.810405035
+r-g05-t01-data.csv,0,1.113434173
+r-g05-t02-data.csv,0,0.650774463
+r-g05-t03-data.csv,0,1.025806909
+r-g06-t01-data.csv, , 
+r-g06-t02-data.csv,4905,0.906740219
+r-g06-t03-data.csv,0,0.777529474
+r-g07-t01-data.csv,688,1.091199114
+r-g07-t02-data.csv,0,1.206451865
+r-g07-t03-data.csv,0,1.129599065
+r-g08-t01-data.csv,4946,1.812729373
+r-g08-t02-data.csv, , 
+r-g08-t03-data.csv,0,1.588741413
+r-g09-t01-data.csv,0,1.060092241
+r-g09-t02-data.csv,2633,0.9629107
+r-g09-t03-data.csv,0,1.113847215
+r-g10-t01-data.csv,591,1.274744534
+r-g10-t02-data.csv,3426,0.942451939
+r-g10-t03-data.csv,0,1.107779314
+r-g11-t01-data.csv,1623,0.945007124
+r-g11-t02-data.csv,4821,0.985541984
+r-g11-t03-data.csv,0,1.009445232
+r-g12-t01-data.csv,1167,1.263681796
+r-g12-t02-data.csv, , 
+r-g12-t03-data.csv,0,1.445386855
+r-g13-t01-data.csv,244,1.190851492
+r-g13-t02-data.csv,0,1.159981134
+r-g13-t03-data.csv,0,1.249399415
+r-g14-t01-data.csv, , 
+r-g14-t02-data.csv, , 
+r-g14-t03-data.csv,0,1.084462075
+r-g15-t01-data.csv,484,1.383668409
+r-g15-t02-data.csv, , 
+r-g15-t03-data.csv,0,1.042630105
+r-g16-t01-data.csv, , 
+r-g16-t02-data.csv,0,1.090675284
+r-g16-t03-data.csv,0,0.796606889
+r-g17-t01-data.csv,0,0.998025703
+r-g17-t02-data.csv,0,1.06076773
+r-g17-t03-data.csv,557,0.812583054
+r-g18-t01-data.csv, , 
+r-g18-t02-data.csv,0,1.047546832
+r-g18-t03-data.csv,0,1.008482146
+r-g19-t01-data.csv,422,1.31856137
+r-g19-t02-data.csv,575,1.31451744
+r-g19-t03-data.csv,1828,1.106648506
+r-g20-t01-data.csv,427,1.091776865
+r-g20-t02-data.csv, , 
+r-g20-t03-data.csv,0,0.668988431
+r-g21-t01-data.csv, , 
+r-g21-t02-data.csv, , 
+r-g21-t03-data.csv,0,1.155161301
+r-g22-t02-data.csv, , 
+r-g22-t03-data.csv,0,0.955334712
+r-g23-t01-data.csv,7278,1.492994313
+r-g23-t02-data.csv,0,1.332894994
+r-g23-t03-data.csv,0,1.255292812
+r-g24-t01-data.csv,511,1.110570878
+r-g24-t02-data.csv,0,1.166780022
+r-g24-t03-data.csv,0,1.314544237
+r-g25-t01-data.csv,0,1.040641683
+r-g25-t02-data.csv,0,1.227622404
+r-g25-t03-data.csv,0,1.005381753
+r-g26-t01-data.csv,806,0.936846521
+r-g26-t02-data.csv,361,1.016649521
+r-g26-t03-data.csv,0,1.013865542
+r-g27-t01-data.csv, , 
+r-g27-t02-data.csv,0,0.846707213
+r-g27-t03-data.csv,0,0.821050449
+r-g28-t01-data.csv,0,0.993591703
+r-g28-t02-data.csv,0,1.042339788
+r-g28-t03-data.csv,0,0.719513738
+r-g29-t01-data.csv,358,1.243265299
+r-g29-t02-data.csv,0,1.165043192
+r-g29-t03-data.csv,0,1.293950199
+r-g30-t01-data.csv,1167,1.179088891
+r-g30-t02-data.csv,1731,1.07334262
+r-g30-t03-data.csv,0,0.929985333
