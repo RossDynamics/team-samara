@@ -154,13 +154,13 @@ def datarun(filename):
   #main loop
 
 folders = ['Silver Trial Data', 'Real Samara Data', 'Norway Trial Data']
-files = ['SilverMapleData','RealSamaraData','NorwayMapleData']
+files = ['SilverMapleData','RealMapleData','NorwayMapleData']
 
 for fname, folder in zip(files, folders):
     os.chdir(folder)
     with open('../'+fname+'.csv', 'w') as data:
         data.write('Trial,Cutoff,Avg Vel,Ang Vel\n')
-        for file in os.listdir('.'):
+        for file in sorted(os.listdir('.')):
             c, v, f = datarun(file)
             if v > 2.2 or v < 0.3:
                 v = ' '
