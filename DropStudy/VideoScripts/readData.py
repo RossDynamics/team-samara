@@ -159,7 +159,7 @@ files = ['SilverMapleData','RealSamaraData','NorwayMapleData']
 for fname, folder in zip(files, folders):
     os.chdir(folder)
     with open('../'+fname+'.csv', 'w') as data:
-        data.write('Trial,Cutoff,Avg Vel\n')
+        data.write('Trial,Cutoff,Avg Vel,Ang Vel\n')
         for file in os.listdir('.'):
             c, v, f = datarun(file)
 #            if v > 2.2 or v < 0.3:
