@@ -162,9 +162,9 @@ for fname, folder in zip(files, folders):
         data.write('Trial,Cutoff,Avg Vel,Ang Vel\n')
         for file in os.listdir('.'):
             c, v, f = datarun(file)
-#            if v > 2.2 or v < 0.3:
-#                v = ' '
-#                c = ' '
+            if v > 2.2 or v < 0.3:
+                v = ' '
+                c = ' '
             if np.isnan(f):
                 f = ' '
             data.write('{},{},{},{}\n'.format(file, c,v,f))
