@@ -15,7 +15,7 @@ for val in zip(vels,angs):
         Rvelocities.append(float(val[0]))
         Rrotation.append(float(val[1]))
 
-print('Real Norway maples \nMean: ',np.mean(Rvelocities),'\n','Std: ',np.std(Rvelocities),'\n\n')
+print('Real Norway maples \nMean (Vel): ',np.mean(Rvelocities),'\n','Std (Vel): ',np.std(Rvelocities),'\n''Mean (Rot): ',np.mean(Rrotation),'\n','Std (Rot): ',np.std(Rrotation),'\n\n')
 
 plt.figure()
 plt.hist(Rvelocities)
@@ -31,7 +31,7 @@ for val in zip(vels,angs):
         Nvelocities.append(float(val[0]))
         Nrotation.append(float(val[1]))
 
-print('3D-printed Norway maples \nMean: ',np.mean(Nvelocities),'\n','Std: ',np.std(Nvelocities),'\n\n')
+print('3D-printed Norway maples \nMean (Vel): ',np.mean(Nvelocities),'\n','Std (Vel): ',np.std(Nvelocities),'\n''Mean (Rot): ',np.mean(Nrotation),'\n','Std (Rot): ',np.std(Nrotation),'\n\n')
 plt.figure()
 plt.hist(Nvelocities)
 plt.figure()
@@ -46,7 +46,7 @@ for val in zip(vels,angs):
         Svelocities.append(float(val[0]))
         Srotation.append(float(val[1]))
 
-print('3D-printed Silver maples \nMean: ',np.mean(Svelocities),'\n','Std: ',np.std(Svelocities),'\n\n')
+print('3D-printed Silver maples \nMean (Vel): ',np.mean(Svelocities),'\n','Std (Vel): ',np.std(Svelocities),'\n''Mean (Rot): ',np.mean(Srotation),'\n','Std (Rot): ',np.std(Srotation),'\n\n')
 
 plt.figure()
 plt.hist(Svelocities)
