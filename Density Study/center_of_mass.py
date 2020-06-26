@@ -8,7 +8,7 @@ Created on Mon Mar 26 10:05:57 2018
 import pandas as pd
 import numpy as np
 from numpy import ma
-from scipy.interpolate import interp1d
+import scipy.interpolate as interp
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import seaborn as sns
@@ -47,14 +47,16 @@ center_percent2 = matrix = np.zeros((2,1))
 
 #Plot mass fraction vs length fraction
 for a in range(0,30):
-    mass[a, 1:] = data_list[a+2][1:21]
-    length[a, 1:] = data_list[a+34][1:21]
+    mass[a, 1:] = data_list[a+1][1:21]
+    length[a, 1:] = data_list[a+33][1:21]
     mass_length[a] = [b*c for b,c in zip(mass[a],np.cumsum(length[a]))]
     center_mass[a] = np.nansum(mass_length[a])/np.nansum(mass[a])
     center_percent[a] = center_mass[a]/np.nansum(length[a])
     X = ma.masked_invalid(length[a])
     Y = ma.masked_invalid(mass[a])
-    f = interp1d(np.cumsum(X[~X.mask])/np.sum(X[~X.mask]), (Y[~X.mask])/np.sum(Y[~X.mask]), kind='cubic')
+    Xperc = np.cumsum(X[~X.mask])/np.sum(X[~X.mask])
+    Yperc = Y[~X.mask]/np.sum(Y[~X.mask])
+    f = interp.UnivariateSpline(Xperc, Yperc, k=3, s=0)
     total_data[a] = f(np.linspace(0,.99,200))
     plt.figure(1)
     plt.title("Mass Fraction vs Length Fraction for Natural Samaras (fit in red)")
@@ -81,14 +83,14 @@ for a, c in enumerate(center_percent):
 
 #Plot mass vs length fraction
 for a in range(0,30):
-    mass[a, 1:] = data_list[a+2][1:21]
-    length[a, 1:] = data_list[a+34][1:21]
+    mass[a, 1:] = data_list[a+1][1:21]
+    length[a, 1:] = data_list[a+33][1:21]
     mass_length[a] = [b*c for b,c in zip(mass[a],np.cumsum(length[a]))]
     center_mass[a] = np.nansum(mass_length[a])/np.nansum(mass[a])
     center_percent[a] = center_mass[a]/np.nansum(length[a])
     X = ma.masked_invalid(length[a])
     Y = ma.masked_invalid(mass[a])
-    g = interp1d(np.cumsum(X[~X.mask])/np.sum(X[~X.mask]), (Y[~X.mask]), kind='cubic')
+    g = interp.UnivariateSpline(np.cumsum(X[~X.mask])/np.sum(X[~X.mask]), (Y[~X.mask]), k=3, s=0)
     total_data2[a] = g(np.linspace(0,.99,200))
     plt.figure(3)
     plt.title("Mass vs Length Fraction for Natural Samaras")
@@ -100,16 +102,16 @@ for a in range(0,30):
 
 #Plot Density vs length fraction
 for a in range(0,30):
-    mass[a, 1:] = data_list[a+2][1:21]
-    length[a, 1:] = data_list[a+34][1:21]
-    area[a] = data_list[a+66][1]
+    mass[a, 1:] = data_list[a+1][1:21]
+    length[a, 1:] = data_list[a+33][1:21]
+    area[a] = data_list[a+65][1]
     mass_length[a] = [b*c for b,c in zip(mass[a],np.cumsum(length[a]))]
     center_mass[a] = np.nansum(mass_length[a])/np.nansum(mass[a])
     center_percent[a] = center_mass[a]/np.nansum(length[a])
     X = ma.masked_invalid(length[a])
     Y = ma.masked_invalid(mass[a])
 #    Z = ma.masked_invalid(area[a])
-    h = interp1d(np.cumsum(X[~X.mask])/np.sum(X[~X.mask]), (Y[~X.mask])/(area[a]), kind='cubic')
+    h = interp.UnivariateSpline(np.cumsum(X[~X.mask])/np.sum(X[~X.mask]), (Y[~X.mask])/(area[a]), k=3, s=0)
     total_data3[a] = h(np.linspace(0,.99,200))
     plt.figure(4)
     plt.title("Area Density vs Length Fraction for Natural Samaras")
@@ -122,14 +124,14 @@ for a in range(0,30):
 
 #Plot linear density vs length fraction
 for a in range(0,30):
-    mass[a, 1:] = data_list[a+2][1:21]
-    length[a, 1:] = data_list[a+34][1:21]
+    mass[a, 1:] = data_list[a+1][1:21]
+    length[a, 1:] = data_list[a+33][1:21]
     mass_length[a] = [b*c for b,c in zip(mass[a],np.cumsum(length[a]))]
     center_mass[a] = np.nansum(mass_length[a])/np.nansum(mass[a])
     center_percent[a] = center_mass[a]/np.nansum(length[a])
     X = ma.masked_invalid(length[a])
     Y = ma.masked_invalid(mass[a])
-    j = interp1d(np.cumsum(X[~X.mask])/np.sum(X[~X.mask]), ((Y[~X.mask])/(X[~X.mask]))*np.sum(X[~X.mask])/np.sum(Y[~X.mask]), kind='cubic')
+    j = interp.UnivariateSpline(np.cumsum(X[~X.mask])/np.sum(X[~X.mask]), ((Y[~X.mask])/(X[~X.mask]))*np.sum(X[~X.mask])/np.sum(Y[~X.mask]), k=3, s=0)
     total_data4[a] = j(np.linspace(0,.99,200))
     plt.figure(5)
     plt.title("Linear Density vs Length Fraction for Natural Samaras (fit in red)")
@@ -142,14 +144,14 @@ for a in range(0,30):
 
 
 for a in range(0,2):
-    mass2[a, 1:] = data_list[a+98][1:21]
-    length2[a, 1:] = data_list[a+101][1:21]
+    mass2[a, 1:] = data_list[a+97][1:21]
+    length2[a, 1:] = data_list[a+100][1:21]
     mass_length2[a] = [b*c for b,c in zip(mass2[a],np.cumsum(length2[a]))]
     center_mass2[a] = np.nansum(mass_length2[a])/np.nansum(mass2[a])
     center_percent2[a] = center_mass2[a]/np.nansum(length2[a])
     X2 = ma.masked_invalid(length2[a])
     Y2 = ma.masked_invalid(mass2[a])
-    w = interp1d(np.cumsum(X2[~X2.mask])/np.sum(X2[~X2.mask]), ((Y2[~X2.mask])/(X2[~X2.mask]))*np.sum(X2[~X2.mask])/np.sum(Y2[~X2.mask]), kind='cubic')
+    w = interp.UnivariateSpline(np.cumsum(X2[~X2.mask])/np.sum(X2[~X2.mask]), ((Y2[~X2.mask])/(X2[~X2.mask]))*np.sum(X2[~X2.mask])/np.sum(Y2[~X2.mask]), k=3, s=0)
     total_data5[a] = w(np.linspace(0,.99,200))
     plt.figure(6)
     plt.title("Linear Density vs Length Fraction for 3D Printed PLA Samaras (natural fit in red)")
